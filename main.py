@@ -1,5 +1,6 @@
 import requests
 import tkinter as tk
+from threading import *
 from PIL import Image, ImageTk
 
 f = open("API_KEY.txt", "r")
@@ -64,7 +65,7 @@ class catPage(tk.Frame):
         
             else:
                 print("NO")
-        
+
         def show_image():
             one_random_image()
 
@@ -77,9 +78,13 @@ class catPage(tk.Frame):
             else:
                 self.image_label = tk.Label(self, image=self.cat_image)
                 self.image_label.pack()
+        
+        def threading():
+            t1=Thread(target=show_image)
+            t1.start()
 
 
-        display_image_button = tk.Button(self, text="Get random image", command=lambda:show_image())
+        display_image_button = tk.Button(self, text="Get random image", command=lambda:threading())
         display_image_button.pack()
 
         home_page_button = tk.Button(self, text="Home", command=lambda:controller.show_frame(home))
@@ -118,8 +123,13 @@ class dogPage(tk.Frame):
                 self.image_label = tk.Label(self, image=self.cat_image)
                 self.image_label.pack()
 
+        
+        def threading():
+            t1=Thread(target=show_dog_image)
+            t1.start()
+
             
-        display_image_button = tk.Button(self, text="Get random image", command=lambda:show_dog_image())
+        display_image_button = tk.Button(self, text="Get random image", command=lambda:threading())
         display_image_button.pack()
 
         home_page_button = tk.Button(self, text="Home", command=lambda:controller.show_frame(home))
