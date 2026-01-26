@@ -1,0 +1,1 @@
+store your apikey for "The Cat API" in a file called "API_KEY.txt" in the same directory as the python file
