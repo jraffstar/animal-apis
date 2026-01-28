@@ -15,6 +15,12 @@ if not os.path.exists(newpath):
 newpath = r'images/perm/'
 if not os.path.exists(newpath):
     os.makedirs(newpath)
+newpath = r'images/perm/cat'
+if not os.path.exists(newpath):
+    os.makedirs(newpath)
+newpath = r'images/perm/dog'
+if not os.path.exists(newpath):
+    os.makedirs(newpath)
 
 
 
@@ -78,13 +84,13 @@ class catPage(tk.Frame):
             print(bool_permanent_store.get())
             if bool_permanent_store.get() == 1:
                 # Count how many images are in the directory currently
-                dir_path = "images/perm/"
+                dir_path = "images/perm/cat/"
                 self.count = 0
                 for path in os.listdir(dir_path):
                     if os.path.isfile(os.path.join(dir_path, path)):
                         self.count += 1
 
-                save_path = f"images/perm/cat{self.count}.jpg"
+                save_path = f"images/perm/cat/cat{self.count}.jpg"
             else:
                 save_path = "images/cat.jpg"
 
@@ -95,7 +101,7 @@ class catPage(tk.Frame):
 
             print(save_path)
             if bool_permanent_store.get() == 1:
-                img = Image.open(f"images/perm/cat{self.count}.jpg")
+                img = Image.open(f"images/perm/cat/cat{self.count}.jpg")
             else:
                 img = Image.open("images/cat.jpg")
 
@@ -127,8 +133,24 @@ class dogPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        def check_perm():
+            global save_path
+            print(bool_permanent_store.get())
+            if bool_permanent_store.get() == 1:
+                # Count how many images are in the directory currently
+                dir_path = "images/perm/dog/"
+                self.count = 0
+                for path in os.listdir(dir_path):
+                    if os.path.isfile(os.path.join(dir_path, path)):
+                        self.count += 1
+
+                save_path = f"images/perm/dog/dog{self.count}.jpg"
+            else:
+                save_path = "images/dog.jpg"
+
+            fetch_dog_image()
+
         def fetch_dog_image():
-            save_path = "images/dog.jpg"
 
             r = requests.get("https://dog.ceo/api/breeds/image/random")
 
@@ -143,10 +165,12 @@ class dogPage(tk.Frame):
                 print("NO")
 
         def show_dog_image():
-            fetch_dog_image()
+            check_perm()
 
-            img = Image.open("images/dog.jpg")
-
+            if bool_permanent_store.get() == 1:
+                img = Image.open(f"images/perm/dog/dog{self.count}.jpg")
+            else:
+                img = Image.open("images/dog.jpg")
             self.cat_image = ImageTk.PhotoImage(img)
 
             if hasattr(self, "image_label"):
@@ -163,6 +187,10 @@ class dogPage(tk.Frame):
 
         display_image_button = tk.Button(self, text="Get random image", command=lambda:threading())
         display_image_button.pack()
+
+        bool_permanent_store = tk.IntVar()
+        permanent_store = tk.Checkbutton(self, text="Save images permanently?", variable=bool_permanent_store, onvalue=1)
+        permanent_store.pack()
 
         home_page_button = tk.Button(self, text="Home", command=lambda:controller.show_frame(home))
         home_page_button.pack()
